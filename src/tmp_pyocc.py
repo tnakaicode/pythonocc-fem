@@ -9,10 +9,16 @@ from optparse import OptionParser
 basename = os.path.dirname(__file__)
 
 sys.path.append(os.path.join("../"))
+from src.base import plot2d, plot3d
 from src.base_occ import dispocc
+from src.base_bempp import plotBEM
 
 import logging
 logging.getLogger('matplotlib').setLevel(logging.ERROR)
+logging.getLogger('numba').setLevel(logging.ERROR)
+logging.getLogger('bempp').setLevel(logging.ERROR)
+
+import bempp
 
 from OCC.Core.gp import gp_Pnt, gp_Vec, gp_Dir
 from OCC.Core.gp import gp_Ax1, gp_Ax2, gp_Ax3
@@ -33,12 +39,12 @@ if __name__ == '__main__':
     opt, argc = parser.parse_args(argvs)
     print(opt, argc)
 
-    obj = dispocc(touch=True)
+    obj = plotBEM(disp=False, touch=True)
     axs = gp_Ax3()
 
     px = np.linspace(-1, 1, 100) * 100 + 50
     py = np.linspace(-1, 1, 200) * 100 - 50
     mesh = np.meshgrid(px, py)
 
-    obj.show_axs_pln()
-    obj.show()
+    # obj.show_axs_pln()
+    # obj.show()

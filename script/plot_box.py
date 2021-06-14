@@ -44,7 +44,6 @@ if __name__ == '__main__':
     pln = make_plane(vec_normal=gp_Vec(0, 0.5, 1))
     obj.selected_shape = [obj.make_cylinder_surf()]
     #obj.grid = bempp_triangle_grid(obj.make_comp_selcted(), isR=2.5, thA=2.5)
-    #obj.export_stl_selected()
+    # obj.export_stl_selected()
     obj.grid = bempp.api.import_grid(obj.tempname + "_001.stl")
     obj.convex_3d()
-    
