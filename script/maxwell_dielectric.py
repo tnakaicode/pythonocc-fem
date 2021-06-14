@@ -86,6 +86,7 @@
 import bempp.api
 import numba
 from bempp.api.linalg import lu
+from bempp.api.assembly.blocked_operator import GeneralizedBlockedOperator
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -97,7 +98,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 from optparse import OptionParser
 
 sys.path.append(os.path.join("../"))
-from base_bempp import plotBEM
+from src.base_bempp import plotBEM
 
 import logging
 logging.getLogger('matplotlib').setLevel(logging.ERROR)
@@ -139,7 +140,9 @@ print("The interior wavenumbers are:")
 print(wavenumbers)
 
 
-# We now assemble the incident wave field. To that affect we choose a z-polarized plane wave travelling at an inciden angle theta in the (x,y) plane. Note that we already scale it with $\sqrt{\epsilon_0}$ to obtain the field $\hat{\mathbf{E}}^\text{inc}$.
+# We now assemble the incident wave field.
+# To that affect we choose a z-polarized plane wave travelling at an inciden angle theta in the (x,y) plane.
+# Note that we already scale it with $\sqrt{\epsilon_0}$ to obtain the field $\hat{\mathbf{E}}^\text{inc}$.
 
 
 theta = np.pi / 4  # Incident wave travelling at a 45 degree angle
@@ -174,11 +177,11 @@ def neumann_trace(point, n, domain_index, result):
     result[:] = 1. / (1j * k0) * np.cross(value, n)
 
 
-# Before we setup the left-hand side block operator matrix we write a small routine that rescales a given $2\times 2$ block operator matrix $A$ to $D^{-1}AD$, where $D$ is a diagonal matrix defined by its diagonal elements $d_1$ and $d_2$.
-
-
 def rescale(A, d1, d2):
     """Rescale the 2x2 block operator matrix A"""
+    # Before we setup the left-hand side block operator matrix
+    # we write a small routine that rescales a given $2\times 2$ block operator matrix $A$ to $D^{-1}AD$,
+    # where $D$ is a diagonal matrix defined by its diagonal elements $d_1$ and $d_2$.
 
     A[0, 1] = A[0, 1] * (d2 / d1)
     A[1, 0] = A[1, 0] * (d1 / d2)
@@ -188,13 +191,14 @@ def rescale(A, d1, d2):
 
 # We now create all the scaled interior multitrace operators and the non-scaled exterior multitrace operators.
 
-
+# ValueError: Unknown assembler type.
 scaled_interior_operators = [
     rescale(bempp.api.operators.boundary.maxwell.multitrace_operator(
-        grid, wavenumber, space_type='electric_dual', assembler='dense_evaluator', precision='single'),
+        grid, wavenumber, space_type='electric_dual', precision='single'),
         np.sqrt(epsr), np.sqrt(mur)) for grid, wavenumber, epsr, mur in
     zip(grids, wavenumbers, rel_permittivities, rel_permeabilities)
 ]
+# assembler='dense_evaluator', 
 
 identity_operators = [
     bempp.api.operators.boundary.sparse.multitrace_identity(op)
@@ -203,14 +207,16 @@ identity_operators = [
 
 exterior_operators = [
     bempp.api.operators.boundary.maxwell.multitrace_operator(
-        grid, k0, space_type='electric_dual', assembler='dense_evaluator', precision='single') for grid in grids
+        grid, k0, space_type='electric_dual', precision='single') for grid in grids
 ]
+# assembler='dense_evaluator', 
 
 
-# We can now loop through the rows of the left-hand side block system to create all block operator entries. We will store the filter operators $\frac{1}{2}\mathsf{Id} - D_j^{-1}\mathsf{A}_{j, -}D_j$ and the transfer operators $\mathsf{A}_{i,j}$. The filter operators will be needed for the right-hand side, and the transfer operators will be needed to compute the interior near-field in each obstacle.
+# We can now loop through the rows of the left-hand side block system to create all block operator entries.
+# We will store the filter operators $\frac{1}{2}\mathsf{Id} - D_j^{-1}\mathsf{A}_{j, -}D_j$ and the transfer operators $\mathsf{A}_{i,j}$.
+# The filter operators will be needed for the right-hand side,
+# and the transfer operators will be needed to compute the interior near-field in each obstacle.
 
-
-from bempp.api.assembly.blocked_operator import GeneralizedBlockedOperator
 
 filter_operators = number_of_scatterers * [None]
 transfer_operators = np.empty(
@@ -229,8 +235,9 @@ for i in range(number_of_scatterers):
         else:
             # Do the off-diagonal elements
             transfer_operators[i, j] = bempp.api.operators.boundary.maxwell.multitrace_operator(
-                grids[j], k0, target=grids[i], space_type="electric_dual", assembler="dense_evaluator", precision='single')
+                grids[j], k0, target=grids[i], space_type="electric_dual", precision='single')
             op[i, j] = transfer_operators[i, j]
+            # assembler="dense_evaluator", 
 blocked_operator = GeneralizedBlockedOperator(op)
 
 
@@ -249,7 +256,8 @@ for i in range(number_of_scatterers):
     rhs[2 * i], rhs[2 * i + 1] = filter_operators[i] * incident_trace_data[i]
 
 
-# We now have everything in place to solve the resulting scattering problem. We use mass matrix preconditioning to precondition the system.
+# We now have everything in place to solve the resulting scattering problem.
+# We use mass matrix preconditioning to precondition the system.
 
 
 bempp.api.enable_console_logging()
@@ -257,7 +265,9 @@ sol, info, _ = bempp.api.linalg.gmres(
     blocked_operator, rhs, use_strong_form=True, return_residuals=True)
 
 
-# In the following we visualize the near-field. The above code has computed the exterior trace data. But we also want to visualize the interior solutions. So we have to compute the interior trace data as well, which is done in the following code.
+# In the following we visualize the near-field.
+# The above code has computed the exterior trace data. But we also want to visualize the interior solutions.
+# So we have to compute the interior trace data as well, which is done in the following code.
 
 
 interior_trace_data = number_of_scatterers * [None]
@@ -270,7 +280,8 @@ for i in range(number_of_scatterers):
                                          ) * sol[2 * i + 1]
 
 
-# We now create a grid of plotting points in the $(\mathbf{x},\mathbf{y})$ plane and assign the indices in the sets associated with one of the obstacles or the exterior.
+# We now create a grid of plotting points in the $(\mathbf{x},\mathbf{y})$ plane
+# and assign the indices in the sets associated with one of the obstacles or the exterior.
 
 # Number of points in the x-direction
 nx = 200
@@ -353,32 +364,37 @@ scattered_image = squared_scattered_field.reshape(nx, ny).T
 total_image = squared_total_field.reshape(nx, ny).T
 
 
-fig, axes = plt.subplots(1, 2, sharex=True, sharey=True)
+ax1 = obj.add_axs(1, 2, 1)
 
-f0 = axes[0].imshow(scattered_image, origin='lower', cmap='magma',
-                    extent=[-2, 2, -2, 2])
+f0 = ax1.imshow(scattered_image, origin='lower', cmap='magma',
+                extent=[-2, 2, -2, 2])
 for c in centers:
-    axes[0].add_patch(
+    ax1.add_patch(
         Circle((c, 0), radius, facecolor='None', edgecolor='k', lw=3))
 
-axes[0].set_title("Squared scattered field strength")
-divider = make_axes_locatable(axes[0])
+ax1.set_title("Squared scattered field strength")
+divider = make_axes_locatable(ax1)
 cax = divider.append_axes("right", size="5%", pad=0.05)
-fig.colorbar(f0, cax=cax)
+obj.fig.colorbar(f0, cax=cax)
 
-f1 = axes[1].imshow(total_image, origin='lower', cmap='magma',
-                    extent=[-2, 2, -2, 2])
+ax2 = obj.add_axs(1, 2, 2)
+f1 = ax2.imshow(total_image, origin='lower', cmap='magma',
+                extent=[-2, 2, -2, 2])
 for c in centers:
-    axes[1].add_patch(
+    ax2.add_patch(
         Circle((c, 0), radius, facecolor='None', edgecolor='k', lw=3))
 
-axes[1].set_title("Squared total field strength")
-divider = make_axes_locatable(axes[1])
+ax2.set_title("Squared total field strength")
+divider = make_axes_locatable(ax2)
 cax = divider.append_axes("right", size="5%", pad=0.05)
-fig.colorbar(f1, cax=cax)
-fig.savefig(obj.tempname + "_001.png")
+obj.fig.colorbar(f1, cax=cax)
+obj.fig.savefig(obj.tempname + "_001.png")
 
-# We now evaluate the bistatic radar cross section with the given incident angle. Here, we are only interested in backscattering into negative y plane. First, we define the evaluation points on the lower half of the unit circle. For the RCS we define the 0 degree angle to point into the negative x-direction, and correspondingly the 180 degree angle to be pointing into the positive x-direction.
+# We now evaluate the bistatic radar cross section with the given incident angle.
+# Here, we are only interested in backscattering into negative y plane.
+# First, we define the evaluation points on the lower half of the unit circle.
+# For the RCS we define the 0 degree angle to point into the negative x-direction,
+# and correspondingly the 180 degree angle to be pointing into the positive x-direction.
 
 
 number_of_angles = 400
@@ -387,7 +403,8 @@ unit_points = np.array(
     [-np.cos(angles), -np.sin(angles), np.zeros(number_of_angles)])
 
 
-# We now assemble for each scatterer the electric and magnetic far-field operators and evaluate the scattered field contribution for each of them. The assembly of the far-field operators will be done in dense mode as they are sufficiently small.
+# We now assemble for each scatterer the electric and magnetic far-field operators and evaluate the scattered field contribution for each of them.
+# The assembly of the far-field operators will be done in dense mode as they are sufficiently small.
 
 
 far_field = np.zeros((3, number_of_angles), dtype='complex128')
@@ -403,10 +420,10 @@ far_field *= 1. / np.sqrt(vacuum_permittivity)
 
 # We now have everything together to plot the bistatic RCS.
 
-
+obj.new_2Dfig()
 bistatic_rcs = 10 * np.log10(4 * np.pi * np.sum(np.abs(far_field)**2, axis=0))
 plt.plot(angles * 180 / np.pi, bistatic_rcs)
 plt.title("Bistatic RCS [dB]")
 _ = plt.xlabel('Angle (Degrees)')
 
-fig.savefig(obj.tempname + "_002.png")
+obj.fig.savefig(obj.tempname + "_002.png")

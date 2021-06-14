@@ -18,13 +18,59 @@ from src.base_occ import dispocc
 import logging
 logging.getLogger('matplotlib').setLevel(logging.ERROR)
 
+from OCC.Core.BRep import BRep_Builder, BRep_Tool
+from OCC.Core.BRepMesh import BRepMesh_IncrementalMesh
+from OCC.Core.BRepBuilderAPI import BRepBuilderAPI_MakeEdge
+from OCC.Core.TopAbs import TopAbs_FACE, TopAbs_SOLID, TopAbs_VERTEX, TopAbs_SHAPE
+from OCC.Core.TopExp import TopExp_Explorer
+from OCC.Core.TopLoc import TopLoc_Location
+from OCC.Core.TopoDS import TopoDS_Shape, TopoDS_Compound, topods_Face
 
-class plotBEM (plot2d):
 
-    k = 15
+def bempp_triangle_grid(comp=TopoDS_Shape(), isR=0.1, thA=0.1):
+    # Mesh the shape
+    BRepMesh_IncrementalMesh(comp, isR, True, thA, True)
+    bild1 = BRep_Builder()
+    bt = BRep_Tool()
+    ex = TopExp_Explorer(comp, TopAbs_FACE)
+    sl = TopExp_Explorer(comp, TopAbs_SOLID)
+    print(sl.Depth())
+    vertices = []
+    elements = []
+    while ex.More():
+        face = topods_Face(ex.Current())
+        location = TopLoc_Location()
+        facing = bt.Triangulation(face, location)
+        tab = facing.Nodes()
+        tri = facing.Triangles()
+        print(facing.This(), facing.NbTriangles(), facing.NbNodes())
+        for i in range(1, facing.NbNodes() + 1):
+            v = tab.Value(i)
+            vertices.append([v.X(), v.Y(), v.Z()])
+        for i in range(1, facing.NbTriangles() + 1):
+            trian = tri.Value(i)
+            index1, index2, index3 = trian.Get()
+            elements.append([index1, index2, index3])
+            # for j in range(1, 4):
+            #    if j == 1:
+            #        m = index1
+            #        n = index2
+            #    elif j == 2:
+            #        n = index3
+            #    elif j == 3:
+            #        m = index2
+            #    me = BRepBuilderAPI_MakeEdge(tab.Value(m), tab.Value(n))
+        ex.Next()
+    vertices = np.array(vertices).T
+    elements = np.array(elements).T
+    return bempp.api.Grid(vertices, elements)
 
-    def __init__(self):
+
+class plotBEM (plot2d, dispocc):
+
+    def __init__(self, disp=True, touch=True):
         plot2d.__init__(self)
+        dispocc.__init__(self, disp=disp, touch=touch)
         self.grid = self.reference_triangle()
 
     def reference_triangle(self):
