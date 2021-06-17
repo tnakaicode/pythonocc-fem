@@ -48,6 +48,7 @@ def __generate_grid_from_geo_string(geo_string):
     """Create a grid from a gmsh geo string."""
     import os
     import subprocess
+    import shutil
     import bempp.api
 
     def msh_from_string(geo_string):
@@ -67,6 +68,7 @@ def __generate_grid_from_geo_string(geo_string):
             print("The following command failed: " + cmd)
             fnull.close()
             raise
+        shutil.copyfile(geo_name, "temp.geo")
         os.remove(geo_name)
         fnull.close()
         return msh_name

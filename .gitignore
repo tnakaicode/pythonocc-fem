@@ -8,9 +8,9 @@ __pycache__/
 *.py[cod]
 
 # Temp
-temp_*/*
-*/temp_*/*
-temp_*
+#temp_*/*
+#*/temp_*/*
+#temp_*
 
 # CMake
 CMakeLists.txt.user
