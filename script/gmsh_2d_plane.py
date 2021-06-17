@@ -98,6 +98,6 @@ def geofile_2dplane():
 	Physical Surface("outlet") = {77};
 	Physical Volume("volume") = {2, 1, 3}; 
     Mesh.Algorithm = 6;
-    Mesh.SaveAll
+    Mesh.SaveAll;
     """
     return __generate_grid_from_geo_string(stub)
