@@ -1,7 +1,9 @@
 """Various built-in test shapes."""
 
 import numpy as _np
+import os
 
+basename = os.path.dirname(__file__)
 
 def get_gmsh_file():
     """
@@ -61,14 +63,14 @@ def __generate_grid_from_geo_string(geo_string):
         f.close()
 
         fnull = open(os.devnull, "w")
-        cmd = gmsh_command + " -2 " + geo_name
+        cmd = gmsh_command + " -2 " + geo_name + " -format msh2"
         try:
             subprocess.check_call(cmd, shell=True, stdout=fnull, stderr=fnull)
         except:
             print("The following command failed: " + cmd)
             fnull.close()
             raise
-        shutil.copyfile(geo_name, "temp.geo")
+        shutil.copyfile(geo_name, basename + "/../temp_geo/temp.geo")
         os.remove(geo_name)
         fnull.close()
         return msh_name
