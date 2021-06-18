@@ -94,7 +94,7 @@ class plotBEM (plot2d, dispocc):
     def import_mshfile(self):
         options = QFileDialog.Options()
         mshfile, _ = QFileDialog.getOpenFileName(self.wi, 'QFileDialog.getOpenFileName()', '',
-                                                 'CAD files (*.msh *.stl)',
+                                                 'CAD files (*.msh *.stl *.vtu)',
                                                  options=options)
 
         # Abaqus (.inp), ANSYS msh (.msh), AVS-UCD (.avs),
