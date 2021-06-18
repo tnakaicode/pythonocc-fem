@@ -1,3 +1,4 @@
+from OCCUtils.Construct import make_polygon
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
@@ -5,11 +6,10 @@ import os
 import time
 import subprocess
 import tempfile
+import meshio
 from scipy.spatial import ConvexHull, Delaunay
 from linecache import getline, clearcache
 from optparse import OptionParser
-
-import bempp.api
 
 sys.path.append(os.path.join("../"))
 from src.base import plot2d, plot3d
@@ -17,7 +17,18 @@ from src.base_occ import dispocc
 
 import logging
 logging.getLogger('matplotlib').setLevel(logging.ERROR)
+logging.getLogger('numba').setLevel(logging.ERROR)
+logging.getLogger('bempp').setLevel(logging.ERROR)
 
+# pip install meshio[all]
+import bempp.api
+
+from PyQt5.QtWidgets import QApplication, qApp
+from PyQt5.QtWidgets import QDialog, QCheckBox
+from PyQt5.QtWidgets import QFileDialog
+# pip install PyQt5
+
+from OCC.Core.gp import gp_Pnt
 from OCC.Core.BRep import BRep_Builder, BRep_Tool
 from OCC.Core.BRepMesh import BRepMesh_IncrementalMesh
 from OCC.Core.BRepBuilderAPI import BRepBuilderAPI_MakeEdge
@@ -72,6 +83,46 @@ class plotBEM (plot2d, dispocc):
         plot2d.__init__(self)
         dispocc.__init__(self, disp=disp, touch=touch)
         self.grid = self.reference_triangle()
+
+        self.add_function("Mesh", self.import_mshfile)
+
+    def show_msh(self):
+        build = BRep_Builder()
+        comp1 = TopoDS_Compound()
+        build.MakeCompound(comp1)
+
+    def import_mshfile(self):
+        options = QFileDialog.Options()
+        mshfile, _ = QFileDialog.getOpenFileName(self.wi, 'QFileDialog.getOpenFileName()', '',
+                                                 'CAD files (*.msh *.stl)',
+                                                 options=options)
+
+        # Abaqus (.inp), ANSYS msh (.msh), AVS-UCD (.avs),
+        # CGNS (.cgns), DOLFIN XML (.xml), Exodus (.e, .exo),
+        # FLAC3D (.f3grid), H5M (.h5m), Kratos/MDPA (.mdpa),
+        # Medit (.mesh, .meshb), MED/Salome (.med),
+        # Nastran (bulk data, .bdf, .fem, .nas),
+        # Netgen (.vol, .vol.gz),
+        # Neuroglancer precomputed format,
+        # Gmsh (format versions 2.2, 4.0, and 4.1, .msh),
+        # OBJ (.obj), OFF (.off),
+        # PERMAS (.post, .post.gz, .dato, .dato.gz),
+        # PLY (.ply), STL (.stl), Tecplot .dat,
+        # TetGen .node/.ele, SVG (2D output only) (.svg), SU2 (.su2),
+        # UGRID (.ugrid), VTK (.vtk), VTU (.vtu), WKT (TIN) (.wkt),
+        # XDMF (.xdmf, .xmf).
+
+        #self.grid = bempp.api.import_grid(mshfile)
+        mesh = meshio.read(mshfile)
+
+        build = BRep_Builder()
+        comp1 = TopoDS_Compound()
+        build.MakeCompound(comp1)
+        for num in mesh.cells_dict["triangle"]:
+            print(num)
+            pts = [gp_Pnt(*mesh.points[i]) for i in num]
+            build.Add(comp1, make_polygon(pts, closed=True))
+        self.display.DisplayShape(comp1)
 
     def reference_triangle(self):
         """Return a grid consisting of only the reference triangle."""
@@ -161,5 +212,16 @@ if __name__ == '__main__':
     print(opt, argc)
 
     obj = plotBEM()
-    bempp.api.export(obj.tempname + ".msh", obj.grid, write_binary=False)
-    obj.convex_3d()
+    obj.show()
+    #bempp.api.export(obj.tempname + ".msh", obj.grid, write_binary=False)
+    # obj.convex_3d()
+
+    # meshio-convert    input.msh output.vtk   # convert between two formats
+    # 
+    # meshio-info       input.xdmf             # show some info about the mesh
+    #
+    # meshio-compress   input.vtu              # compress the mesh file
+    # meshio-decompress input.vtu              # decompress the mesh file
+    #
+    # meshio-binary     input.msh              # convert to binary format
+    # meshio-ascii      input.msh              # convert to ASCII format
