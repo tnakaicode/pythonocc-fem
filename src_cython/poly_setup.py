@@ -9,4 +9,4 @@ setup(
 
 # [build-system]
 requires = ["setuptools", "wheel", "Cython"]
-# python setup.py build_ext --inplace
+# python poly_setup.py build_ext --inplace
