@@ -14,7 +14,6 @@ from OCC.Core.IMeshData import IMeshData_Failure
 from OCC.Core.RWMesh import RWMesh_CafReader
 from OCC.Core.XBRepMesh import xbrepmesh
 
-
 if __name__ == "__main__":
     mat = math_Matrix(1, 10, 1, 10, 0.0)
     print(mat)

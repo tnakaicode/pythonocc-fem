@@ -26,6 +26,12 @@ from OCC.Core.FairCurve import FairCurve_MinimalVariation, FairCurve_Distributio
 from OCC.Core.FEmTool import FEmTool_ElementsOfRefMatrix, FEmTool_LinearJerk, FEmTool_LinearFlexion
 from OCC.Core.math import math_Vector, math_Matrix
 
-
 if __name__ == "__main__":
-    mat = math_Matrix()
+    mat = math_Matrix(1, 4, 1, 4, 0.0)
+    mat.SetValue(1, 1, 1)
+    mat.SetValue(2, 2, 1)
+    mat.SetValue(3, 3, 1)
+    mat.SetValue(3, 4, 1)
+    mat.SetValue(4, 4, 0.5)
+    print(mat, mat.Determinant())
+    print(mat.DumpToString())

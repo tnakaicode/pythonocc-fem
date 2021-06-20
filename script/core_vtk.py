@@ -17,5 +17,10 @@ from OCC.Core.XBRepMesh import xbrepmesh
 from OCC.Core.IntWalk import IntWalk_ArretSurPoint
 
 if __name__ == "__main__":
-    mat = math_Matrix(1, 10, 1, 10, 0.0)
-    print(mat)
+    mat = math_Matrix(1, 4, 1, 4, 0.0)
+    mat.SetValue(1, 1, 1)
+    mat.SetValue(2, 2, 1)
+    mat.SetValue(3, 3, 1)
+    mat.SetValue(3, 4, 1)
+    mat.SetValue(4, 4, 0.5)
+    print(mat, mat.Determinant())
