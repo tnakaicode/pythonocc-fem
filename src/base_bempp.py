@@ -84,7 +84,8 @@ class plotBEM (plot2d, dispocc):
         dispocc.__init__(self, disp=disp, touch=touch)
         self.grid = self.reference_triangle()
 
-        self.add_function("Mesh", self.import_mshfile)
+        if self.touch == True:
+            self.add_function("Mesh", self.import_mshfile)
 
     def show_msh(self):
         build = BRep_Builder()
@@ -217,7 +218,7 @@ if __name__ == '__main__':
     # obj.convex_3d()
 
     # meshio-convert    input.msh output.vtk   # convert between two formats
-    # 
+    #
     # meshio-info       input.xdmf             # show some info about the mesh
     #
     # meshio-compress   input.vtu              # compress the mesh file

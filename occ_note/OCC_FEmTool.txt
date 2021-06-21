@@ -1,3 +1,5 @@
+https://dev.opencascade.org/doc/occt-7.5.0/refman/html/package_femtool.html
+
 FEmTool_Assembly
 FEmTool_AssemblyTable
 FEmTool_Curve
@@ -12,3 +14,18 @@ FEmTool_ListOfVectors
 FEmTool_ProfileMatrix
 FEmTool_SeqOfLinConstr
 FEmTool_SparseMatrix
+
+https://dev.opencascade.org/doc/occt-7.5.0/refman/html/package_faircurve.html
+
+FairCurve_AnalysisCode
+FairCurve_Batten
+FairCurve_BattenLaw
+FairCurve_DistributionOfEnergy
+FairCurve_DistributionOfJerk
+FairCurve_DistributionOfSagging
+FairCurve_DistributionOfTension
+FairCurve_Energy
+FairCurve_EnergyOfBatten
+FairCurve_EnergyOfMVC
+FairCurve_MinimalVariation
+FairCurve_Newton

@@ -46,7 +46,7 @@ import time
 from optparse import OptionParser
 
 sys.path.append(os.path.join("../"))
-from base_bempp import plotBEM
+from src.base_bempp import plotBEM
 
 import logging
 logging.getLogger('matplotlib').setLevel(logging.ERROR)
@@ -57,7 +57,7 @@ logging.getLogger('bempp').setLevel(logging.ERROR)
 # For this problem, we will use the built-in function `sphere` that defines a simple spherical grid.
 # Details of other available grids can be found in the <a href='https://bempp.com/2017/07/06/grids-in-bempp'>grids tutorial</a>.
 
-obj = plotBEM()
+obj = plotBEM(disp=False, touch=False)
 print(bempp.api.TMP_PATH)
 bempp.api.TMP_PATH = obj.tmpdir
 print(bempp.api.TMP_PATH)
@@ -67,7 +67,7 @@ print(bempp.api.TMP_PATH)
 # As function space on the grid we choose a simple space of piecewise constant functions.
 
 
-grid = bempp.api.shapes.reentrant_cube(h=0.02, refinement_factor=1)
+grid = bempp.api.shapes.reentrant_cube(h=0.1, refinement_factor=1)
 space = bempp.api.function_space(grid, "DP", 0)
 
 
@@ -94,10 +94,30 @@ op = bempp.api.operators.boundary.laplace.single_layer(space, space, space)
 # To improve convergence we use a strong form discretisation that automatically preconditions with the mass matrix.
 
 
-sol, _, iteration_count = bempp.api.linalg.gmres(
-    op, rhs, use_strong_form=True, return_iteration_count=True)
+sol, _, res, iteration_count = bempp.api.linalg.gmres(
+    op, rhs, use_strong_form=True, return_residuals=True, return_iteration_count=True)
+
+# Perform GMRES solve via interface to scipy.
+
+#    This function behaves like the scipy.sparse.linalg.gmres function. But
+#    instead of a linear operator and a vector b it takes a boundary operator
+#    and a grid function or a blocked operator and a list of grid functions.
+#    The result is returned as a grid function or as a list of grid functions
+#    in the correct spaces.
+
+# sol
+# Create a list of grid functions from a long vector of coefficients.
+#
+#     Parameters
+#     ----------
+#     coefficients : np.ndarray
+#         One-dimensional array of coefficients
+#     spaces : list of Space objects
+#         The sum of the global dofs of the spaces must be equal to the
+#         length of the coefficients vector.
 
 print("Number of iterations: {0}".format(iteration_count))
+#print("Residual: {:.3e}".format(res))
 
 
 # To obtain the capacity we simply integrate the solution across the boundary.
@@ -109,4 +129,6 @@ print("The normalized capacity is {0}.".format(normalized_capacity))
 obj.grid = grid
 obj.export_bempp_msh()
 obj.convex_3d()
+# obj.new_2Dfig()
+# sol.plot()
 print("ok")
