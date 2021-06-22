@@ -68,7 +68,7 @@ import time
 from optparse import OptionParser
 
 sys.path.append(os.path.join("../"))
-from base import plot2d, plot3d
+from src.base_bempp import plotBEM
 
 import logging
 logging.getLogger('matplotlib').setLevel(logging.ERROR)
@@ -91,7 +91,7 @@ def combined_data(x, n, domain_index, result):
 
 
 # The following command creates a sphere mesh.
-obj = plot2d()
+obj = plotBEM(disp=False, touch=False)
 print(bempp.api.TMP_PATH)
 bempp.api.TMP_PATH = obj.tmpdir
 print(bempp.api.TMP_PATH)

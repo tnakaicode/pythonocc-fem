@@ -60,7 +60,7 @@ import time
 from optparse import OptionParser
 
 sys.path.append(os.path.join("../"))
-from base import plot2d, plot3d
+from src.base_bempp import plotBEM
 
 import logging
 logging.getLogger('matplotlib').setLevel(logging.ERROR)
@@ -71,7 +71,7 @@ logging.getLogger('bempp').setLevel(logging.ERROR)
 # For this problem, we will use the built-in function `sphere` that defines a simple spherical grid.
 # Details of other available grids can be found in the <a href='https://bempp.com/2017/07/06/grids-in-bempp'>grids tutorial</a>.
 
-obj = plot2d()
+obj = plotBEM(disp=False, touch=False)
 print(bempp.api.TMP_PATH)
 bempp.api.TMP_PATH = obj.tmpdir
 print(bempp.api.TMP_PATH)
