@@ -1,3 +1,9 @@
 [submodule "bempp-cl"]
 	path = bempp-cl
 	url = https://github.com/bempp/bempp-cl.git
+[submodule "pymor"]
+	path = pymor
+	url = https://github.com/pymor/pymor.git
+[submodule "dealii"]
+	path = dealii
+	url = https://github.com/dealii/dealii.git
