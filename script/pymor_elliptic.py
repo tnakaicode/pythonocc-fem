@@ -13,11 +13,14 @@ from pymor.discretizers.builtin import discretize_stationary_cg, discretize_stat
 
 
 def main(
-    problem_number: int = Argument(..., min=0, max=1, help='Selects the problem to solve [0 or 1].'),
-    dirichlet_number: int = Argument(..., min=0, max=2, help='Selects the Dirichlet data function [0 to 2].'),
-    neumann_number: int = Argument(..., min=0, max=2, help='Selects the Neumann data function.'),
+    problem_number: int = Argument(
+        0, min=0, max=1, help='Selects the problem to solve [0 or 1].'),
+    dirichlet_number: int = Argument(
+        0, min=0, max=2, help='Selects the Dirichlet data function [0 to 2].'),
+    neumann_number: int = Argument(
+        0, min=0, max=2, help='Selects the Neumann data function.'),
     neumann_count: int = Argument(
-        ...,
+        0,
         min=0,
         max=3,
         help='0: no neumann boundary\n\n'
@@ -26,7 +29,8 @@ def main(
              '3: right+top+bottom edges are neumann boundary\n\n'
     ),
 
-    fv: bool = Option(False, help='Use finite volume discretization instead of finite elements.'),
+    fv: bool = Option(
+        False, help='Use finite volume discretization instead of finite elements.'),
     rect: bool = Option(False, help='Use RectGrid instead of TriaGrid.'),
 ):
     """Solves the Poisson equation in 2D using pyMOR's builtin discreization toolkit."""
@@ -55,8 +59,8 @@ def main(
         rhs=rhs,
         dirichlet_data=dirichlet,
         neumann_data=neumann,
-        outputs = (('l2', ConstantFunction(1, dim_domain=2)),             # average over the domain
-                   ('l2_boundary', ConstantFunction(0.25, dim_domain=2))) # average over the boundary
+        outputs=(('l2', ConstantFunction(1, dim_domain=2)),             # average over the domain
+                 ('l2_boundary', ConstantFunction(0.25, dim_domain=2)))  # average over the boundary
     )
 
     for n in [32, 128]:

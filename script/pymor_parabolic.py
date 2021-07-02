@@ -9,8 +9,10 @@ from typer import Argument, Option, Typer
 from pymor.basic import *
 
 
-app = Typer(help="Solve parabolic equations using pyMOR's builtin discretization toolkit.")
-FV = Option(False, help='Use finite volume discretization instead of finite elements.')
+app = Typer(
+    help="Solve parabolic equations using pyMOR's builtin discretization toolkit.")
+FV = Option(
+    False, help='Use finite volume discretization instead of finite elements.')
 GRID = Option(100, help='Use grid with NIxNI intervals.')
 NT = Option(100, help='Number of time steps.')
 RECT = Option(False, help='Use RectGrid instead of TriaGrid.')
@@ -18,7 +20,8 @@ RECT = Option(False, help='Use RectGrid instead of TriaGrid.')
 
 @app.command()
 def heat(
-    top: float = Argument(..., help='The heat diffusion coefficient for the top bars.'),
+    top: float = Argument(
+        0.1, help='The heat diffusion coefficient for the top bars.'),
 
     fv: bool = FV,
     grid: int = GRID,
@@ -61,7 +64,7 @@ def heat(
 
 @app.command()
 def dar(
-    speed: float = Argument(..., help='The advection speed.'),
+    speed: float = Argument(0.1, help='The advection speed.'),
 
     fv: bool = FV,
     grid: int = GRID,

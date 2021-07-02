@@ -81,7 +81,8 @@ def run_mor_method_param(fom, r, w, mus, reductor_cls, reductor_short_name, **re
 
 
 def main(
-        diameter: float = Argument(0.01, help='Diameter option for the domain discretizer.'),
+        diameter: float = Argument(
+            0.01, help='Diameter option for the domain discretizer.'),
         r: int = Argument(5, help='Order of the ROMs.'),
 ):
     """Parametric 1D heat equation example."""
@@ -95,8 +96,10 @@ def main(
                                        ExpressionFunction('(0.5 < x[...,0]) * 1.', 1)],
                                       [1,
                                        ProjectionParameterFunctional('diffusion')]),
-            robin_data=(ConstantFunction(1., 1), ExpressionFunction('(x[...,0] < 1e-10) * 1.', 1)),
-            outputs=(('l2_boundary', ExpressionFunction('(x[...,0] > (1 - 1e-10)) * 1.', 1)),),
+            robin_data=(ConstantFunction(1., 1), ExpressionFunction(
+                '(x[...,0] < 1e-10) * 1.', 1)),
+            outputs=(('l2_boundary', ExpressionFunction(
+                '(x[...,0] > (1 - 1e-10)) * 1.', 1)),),
         ),
         ConstantFunction(0., 1),
         T=3.
@@ -145,7 +148,8 @@ def main(
         print(f'mu = {mu}:')
         print(f'    H_2-norm of the full model:    {lti.h2_norm(mu=mu):e}')
         if config.HAVE_SLYCOT:
-            print(f'    H_inf-norm of the full model:  {lti.hinf_norm(mu=mu):e}')
+            print(
+                f'    H_inf-norm of the full model:  {lti.hinf_norm(mu=mu):e}')
         print(f'    Hankel-norm of the full model: {lti.hankel_norm(mu=mu):e}')
 
     # Model order reduction
@@ -154,7 +158,8 @@ def main(
     run_mor_method_param(lti, r, w_list, mu_list, BRBTReductor, 'BRBT')
     run_mor_method_param(lti, r, w_list, mu_list, IRKAReductor, 'IRKA')
     run_mor_method_param(lti, r, w_list, mu_list, TSIAReductor, 'TSIA')
-    run_mor_method_param(lti, r, w_list, mu_list, OneSidedIRKAReductor, 'OS-IRKA', version='V')
+    run_mor_method_param(lti, r, w_list, mu_list,
+                         OneSidedIRKAReductor, 'OS-IRKA', version='V')
     run_mor_method_param(lti, r, w_list, mu_list, MTReductor, 'MT')
 
 

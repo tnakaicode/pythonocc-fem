@@ -35,7 +35,6 @@ def main(r: int = Argument(10, help='Order of the TF-IRKA ROM.')):
     for mu in mu_list:
         fom.mag_plot(w, ax=ax, mu=mu, label=fr'$\tau = {mu}$')
     ax.legend()
-    plt.show()
 
     # TF-IRKA
     roms_tf_irka = []
@@ -50,14 +49,12 @@ def main(r: int = Argument(10, help='Order of the TF-IRKA ROM.')):
         ax.plot(poles.real, poles.imag, '.', label=fr'$\tau = {mu}$')
     ax.set_title("Poles of TF-IRKA's ROMs")
     ax.legend()
-    plt.show()
 
     fig, ax = plt.subplots()
     for mu, rom in zip(mu_list, roms_tf_irka):
         rom.mag_plot(w, ax=ax, label=fr'$\tau = {mu}$')
     ax.set_title("Magnitude plot of TF-IRKA's ROMs")
     ax.legend()
-    plt.show()
 
     fig, ax = plt.subplots()
     for mu, rom in zip(mu_list, roms_tf_irka):

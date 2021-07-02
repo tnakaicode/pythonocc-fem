@@ -23,7 +23,8 @@ from pymordemos.parametric_heat import run_mor_method_param
 
 
 def main(
-        n: int = Argument(101, help='Order of the full second-order model (odd number).'),
+        n: int = Argument(
+            101, help='Order of the full second-order model (odd number).'),
         r: int = Argument(5, help='Order of the ROMs.'),
 ):
     """Parametric string example."""
@@ -82,13 +83,15 @@ def main(
     plt.show()
 
     # "Hankel" singular values
-    fig, ax = plt.subplots(2, 2, figsize=(12, 8), sharey=True, constrained_layout=True)
+    fig, ax = plt.subplots(2, 2, figsize=(
+        12, 8), sharey=True, constrained_layout=True)
     for mu in mu_list:
         psv = so_sys.psv(mu=mu)
         vsv = so_sys.vsv(mu=mu)
         pvsv = so_sys.pvsv(mu=mu)
         vpsv = so_sys.vpsv(mu=mu)
-        ax[0, 0].semilogy(range(1, len(psv) + 1), psv, '.-', label=fr'$\mu = {mu}$')
+        ax[0, 0].semilogy(range(1, len(psv) + 1), psv,
+                          '.-', label=fr'$\mu = {mu}$')
         ax[0, 1].semilogy(range(1, len(vsv) + 1), vsv, '.-')
         ax[1, 0].semilogy(range(1, len(pvsv) + 1), pvsv, '.-')
         ax[1, 1].semilogy(range(1, len(vpsv) + 1), vpsv, '.-')
@@ -104,8 +107,10 @@ def main(
         print(f'mu = {mu}:')
         print(f'    H_2-norm of the full model:    {so_sys.h2_norm(mu=mu):e}')
         if config.HAVE_SLYCOT:
-            print(f'    H_inf-norm of the full model:  {so_sys.hinf_norm(mu=mu):e}')
-        print(f'    Hankel-norm of the full model: {so_sys.hankel_norm(mu=mu):e}')
+            print(
+                f'    H_inf-norm of the full model:  {so_sys.hinf_norm(mu=mu):e}')
+        print(
+            f'    Hankel-norm of the full model: {so_sys.hankel_norm(mu=mu):e}')
 
     # Model order reduction
     run_mor_method_param(so_sys, r, w, mu_list, SOBTpReductor, 'SOBTp')

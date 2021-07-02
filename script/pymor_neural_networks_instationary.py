@@ -12,10 +12,13 @@ from pymor.core.exceptions import TorchMissing
 
 
 def main(
-    grid_intervals: int = Argument(..., help='Grid interval count.'),
-    time_steps: int = Argument(..., help='Number of time steps used for discretization.'),
-    training_samples: int = Argument(..., help='Number of samples used for training the neural network.'),
-    validation_samples: int = Argument(..., help='Number of samples used for validation during the training phase.'),
+    grid_intervals: int = Argument(10, help='Grid interval count.'),
+    time_steps: int = Argument(
+        10, help='Number of time steps used for discretization.'),
+    training_samples: int = Argument(
+        100, help='Number of samples used for training the neural network.'),
+    validation_samples: int = Argument(
+        100, help='Number of samples used for validation during the training phase.'),
 ):
     """Model oder reduction with neural networks for an instationary problem
 
@@ -33,7 +36,8 @@ def main(
     training_set = parameter_space.sample_uniformly(training_samples)
     validation_set = parameter_space.sample_randomly(validation_samples)
 
-    reductor = NeuralNetworkInstationaryReductor(fom, training_set, validation_set, basis_size=10)
+    reductor = NeuralNetworkInstationaryReductor(
+        fom, training_set, validation_set, basis_size=10)
     rom = reductor.reduce(hidden_layers='[30, 30, 30]', restarts=100)
 
     test_set = parameter_space.sample_randomly(10)
@@ -78,3 +82,14 @@ def create_fom(grid_intervals, time_steps):
 
 if __name__ == '__main__':
     run(main)
+
+    # OMP: Error #15: Initializing libiomp5md.dll, but found libiomp5md.dll already initialized.
+    # OMP: Hint This means that multiple copies of the OpenMP runtime have been linked into the program.
+    #
+    # That is dangerous, since it can degrade performance or cause incorrect results.
+    # The best thing to do is to ensure that only a single OpenMP runtime is linked into the process,
+    # e.g. by avoiding static linking of the OpenMP runtime in any library.
+    # As an unsafe, unsupported, undocumented workaround
+    # you can set the environment variable KMP_DUPLICATE_LIB_OK=TRUE to allow the program to continue to execute,
+    # but that may cause crashes or silently produce incorrect results.
+    # For more information, please see http://www.intel.com/software/products/support/.

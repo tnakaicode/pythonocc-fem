@@ -58,7 +58,7 @@ def main(
     # form a model
     lti = LTIModel(A, B, C)
 
-    mu_list = [1/50, 1/20, 1/10, 1/5, 1/2, 1]
+    mu_list = [1 / 50, 1 / 20, 1 / 10, 1 / 5, 1 / 2, 1]
     w = np.logspace(0.5, 3.5, 200)
 
     # System poles
@@ -68,14 +68,12 @@ def main(
         ax.plot(poles.real, poles.imag, '.', label=fr'$\mu = {mu}$')
     ax.set_title('System poles')
     ax.legend()
-    plt.show()
 
     # Magnitude plot
     fig, ax = plt.subplots()
     for mu in mu_list:
         lti.mag_plot(w, ax=ax, mu=mu, label=fr'$\mu = {mu}$')
     ax.legend()
-    plt.show()
 
     # Hankel singular values
     fig, ax = plt.subplots()
@@ -84,14 +82,14 @@ def main(
         ax.semilogy(range(1, len(hsv) + 1), hsv, '.-', label=fr'$\mu = {mu}$')
     ax.set_title('Hankel singular values')
     ax.legend()
-    plt.show()
 
     # System norms
     for mu in mu_list:
         print(f'mu = {mu}:')
         print(f'    H_2-norm of the full model:    {lti.h2_norm(mu=mu):e}')
         if config.HAVE_SLYCOT:
-            print(f'    H_inf-norm of the full model:  {lti.hinf_norm(mu=mu):e}')
+            print(
+                f'    H_inf-norm of the full model:  {lti.hinf_norm(mu=mu):e}')
         print(f'    Hankel-norm of the full model: {lti.hankel_norm(mu=mu):e}')
 
     # Model order reduction
