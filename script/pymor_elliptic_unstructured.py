@@ -13,9 +13,10 @@ from pymor.discretizers.builtin import discretize_stationary_cg
 
 
 def main(
-    angle: float = Argument(..., help='The angle of the circular sector.'),
-    num_points: int = Argument(..., help='The number of points that form the arc of the circular sector.'),
-    clscale: float = Argument(..., help='Mesh element size scaling factor.'),
+    angle: float = Argument(0.1, help='The angle of the circular sector.'),
+    num_points: int = Argument(
+        10, help='The number of points that form the arc of the circular sector.'),
+    clscale: float = Argument(0.1, help='Mesh element size scaling factor.'),
 ):
     """Solves the Poisson equation in 2D on a circular sector domain of radius 1
     using an unstructured mesh.
@@ -31,7 +32,8 @@ def main(
     )
 
     print('Discretize ...')
-    m, data = discretize_stationary_cg(analytical_problem=problem, diameter=clscale)
+    m, data = discretize_stationary_cg(
+        analytical_problem=problem, diameter=clscale)
     grid = data['grid']
     print(grid)
     print()
@@ -43,9 +45,11 @@ def main(
                                   {}, {'angle': angle})
     U_ref = U.space.make_array(solution(grid.centers(2)))
 
-    m.visualize((U, U_ref, U-U_ref),
-                legend=('Solution', 'Analytical solution (circular boundary)', 'Error'),
-                separate_colorbars=True)
+    m.visualize((U, U_ref, U - U_ref),
+                legend=(
+                    'Solution', 'Analytical solution (circular boundary)', 'Error'),
+                separate_colorbars=True,
+                filename="./pymor_elliptic_unstructured.png")
 
 
 if __name__ == '__main__':

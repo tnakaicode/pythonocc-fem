@@ -35,13 +35,13 @@ PARAM_MAX = 1
 
 
 def main(
-    xblocks: int = Argument(..., help='Number of blocks in x direction.'),
-    yblocks: int = Argument(..., help='Number of blocks in y direction.'),
+    xblocks: int = Argument(10, help='Number of blocks in x direction.'),
+    yblocks: int = Argument(10, help='Number of blocks in y direction.'),
     snapshots: int = Argument(
-        ...,
+        5,
         help='Number of snapshots for basis generation per component. In total SNAPSHOTS^(XBLOCKS * YBLOCKS).'
     ),
-    rbsize: int = Argument(..., help='Size of the reduced basis.'),
+    rbsize: int = Argument(10, help='Size of the reduced basis.'),
 
     grid: int = Option(60, help='Use grid with 2*NI*NI elements.'),
     product: Choices('euclidean h1') = Option(

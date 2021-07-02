@@ -5,14 +5,15 @@
 
 
 import numpy as np
+from traitlets.traitlets import default
 from typer import Argument, run
 
 from pymor.basic import *
 
 
 def main(
-    grid_intervals: int = Argument(..., help='Grid interval count.'),
-    training_samples: int = Argument(..., help='Number of samples used for training the reduced basis.')
+    grid_intervals: int = Argument(default=1, help='Grid interval count.'),
+    training_samples: int = Argument(default=10, help='Number of samples used for training the reduced basis.')
 ):
     """Example script for solving linear PDE-constrained parameter optimization problems"""
     fom, mu_bar = create_fom(grid_intervals)

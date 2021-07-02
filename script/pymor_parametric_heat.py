@@ -52,7 +52,6 @@ def run_mor_method_param(fom, r, w, mus, reductor_cls, reductor_short_name, **re
         poles_rom = rom.poles()
         ax.plot(poles_rom.real, poles_rom.imag, '.', label=fr'$\mu = {mu}$')
     ax.set_title(f"{reductor_short_name} reduced model's poles")
-    plt.show()
 
     # Magnitude plots
     fig, ax = plt.subplots()
@@ -60,7 +59,6 @@ def run_mor_method_param(fom, r, w, mus, reductor_cls, reductor_short_name, **re
         rom.mag_plot(w, ax=ax, label=fr'$\mu = {mu}$')
     ax.set_title(f'Magnitude plot of {reductor_short_name} reduced models')
     ax.legend()
-    plt.show()
 
     fig, ax = plt.subplots()
     for mu, rom in zip(mus, roms):
@@ -126,7 +124,6 @@ def main(
         ax.plot(poles.real, poles.imag, '.', label=fr'$\mu = {mu}$')
     ax.set_title('System poles')
     ax.legend()
-    plt.show()
 
     # Magnitude plots
     fig, ax = plt.subplots()
@@ -134,7 +131,6 @@ def main(
         lti.mag_plot(w_list, ax=ax, mu=mu, label=fr'$\mu = {mu}$')
     ax.set_title('Magnitude plot of the full model')
     ax.legend()
-    plt.show()
 
     # Hankel singular values
     fig, ax = plt.subplots()
@@ -143,7 +139,6 @@ def main(
         ax.semilogy(range(1, len(hsv) + 1), hsv, label=fr'$\mu = {mu}$')
     ax.set_title('Hankel singular values')
     ax.legend()
-    plt.show()
 
     # System norms
     for mu in mu_list:
