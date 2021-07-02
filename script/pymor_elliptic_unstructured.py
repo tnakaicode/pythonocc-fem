@@ -49,7 +49,7 @@ def main(
                 legend=(
                     'Solution', 'Analytical solution (circular boundary)', 'Error'),
                 separate_colorbars=True,
-                filename="./pymor_elliptic_unstructured.png")
+                filename="./temp_pymor/pymor_elliptic_unstructured")
 
 
 if __name__ == '__main__':

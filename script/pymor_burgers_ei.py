@@ -20,12 +20,12 @@ from pymor.tools.typer import Choices
 
 
 def main(
-    exp_min: float = Argument(..., help='Minimal exponent'),
-    exp_max: float = Argument(..., help='Maximal exponent'),
-    ei_snapshots: int = Argument(..., help='Number of snapshots for empirical interpolation.'),
-    ei_size: int = Argument(..., help='Number of interpolation DOFs.'),
-    snapshots: int = Argument(..., help='Number of snapshots for basis generation.'),
-    rb_size: int = Argument(..., help='Size of the reduced basis.'),
+    exp_min: float = Argument(0.1, help='Minimal exponent'),
+    exp_max: float = Argument(1.0, help='Maximal exponent'),
+    ei_snapshots: int = Argument(10, help='Number of snapshots for empirical interpolation.'),
+    ei_size: int = Argument(10, help='Number of interpolation DOFs.'),
+    snapshots: int = Argument(10, help='Number of snapshots for basis generation.'),
+    rb_size: int = Argument(10, help='Size of the reduced basis.'),
 
     cache_region: Choices('none memory disk persistent') = Option(
         'disk',
@@ -46,7 +46,7 @@ def main(
     num_flux: Choices('lax_friedrichs engquist_osher') = Option('engquist_osher', help='Numerical flux to use.'),
     plot_err: bool = Option(False, help='Plot error.'),
     plot_ei_err: bool = Option(False, help='Plot empirical interpolation error.'),
-    plot_error_landscape: bool = Option(False, help='Calculate and show plot of reduction error vs. basis sizes.'),
+    plot_error_landscape: bool = Option(True, help='Calculate and show plot of reduction error vs. basis sizes.'),
     plot_error_landscape_M: int = Option(10, help='Number of collateral basis sizes to test.'),
     plot_error_landscape_N: int = Option(10, help='Number of basis sizes to test.'),
     plot_solutions: bool = Option(False, help='Plot some example solutions.'),
