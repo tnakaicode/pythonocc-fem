@@ -35,8 +35,7 @@ def main(
     grid: int = Option(60, help='Use grid with (2*NI)*NI elements.'),
     grid_type: Choices('rect tria') = Option('rect', help='Type of grid to use.'),
     initial_data: Choices('sin bump') = Option('sin', help='Select the initial data (sin, bump).'),
-    ipython_engines: int = Option(
-        0,
+    ipython_engines: int = Option(0,
         help='If positive, the number of IPython cluster engines to use for parallel greedy search. '
              'If zero, no parallelization is performed.'),
     ipython_profile: str = Option(None, help='IPython profile to use for parallelization.'),

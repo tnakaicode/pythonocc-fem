@@ -20,7 +20,6 @@ def main(
     tol: float = Argument(0.1, help='Prescribed mean l2 approximation error.'),
     dist: int = Argument(10, help='Number of slices for distributed HAPOD.'),
     inc: int = Argument(10, help='Number of steps for incremental HAPOD.'),
-
     arity: int = Option(None, help='Arity of distributed HAPOD tree'),
     grid: int = Option(60, help='Use grid with (2*NI)*NI elements.'),
     nt: int = Option(100, help='Number of time steps.'),
