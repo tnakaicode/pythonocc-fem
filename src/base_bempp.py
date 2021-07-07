@@ -86,11 +86,20 @@ class plotBEM (plot2d, dispocc):
 
         if self.touch == True:
             self.add_function("Mesh", self.import_mshfile)
+            self.add_function("Mesh", self.show_msh)
 
     def show_msh(self):
         build = BRep_Builder()
         comp1 = TopoDS_Compound()
         build.MakeCompound(comp1)
+
+        for idx in range(self.grid.edges.shape[1]):
+            xi = self.grid.vertices[:, self.grid.edges[0, idx]]
+            yi = self.grid.vertices[:, self.grid.edges[1, idx]]
+            me = BRepBuilderAPI_MakeEdge(gp_Pnt(*xi), gp_Pnt(*yi))
+            if me.IsDone():
+                build.Add(comp1, me.Edge())
+        self.display.DisplayShape(comp1)
 
     def import_mshfile(self):
         options = QFileDialog.Options()
