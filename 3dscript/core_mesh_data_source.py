@@ -17,17 +17,17 @@
 
 import os
 
-from OCC.Core.MeshDataSource import Mesh_DataSource
+from OCC.Core.MeshVS import MeshVS_DataSource
 from OCC.Core.RWStl import rwstl_ReadFile
 from OCC.Core.MeshVS import *
 
 from OCC.Display.SimpleGui import init_display
 
-stl_filename = os.path.join('..', 'assets', 'models', 'fan.stl')
+stl_filename = "./models/fan.stl"
 
 a_stl_mesh = rwstl_ReadFile(stl_filename)
 
-a_data_source = Mesh_DataSource(a_stl_mesh)
+a_data_source = MeshVS_DataSource(a_stl_mesh)
 
 a_mesh_prs = MeshVS_Mesh()
 a_mesh_prs.SetDataSource(a_data_source)

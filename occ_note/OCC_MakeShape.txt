@@ -1,0 +1,12 @@
+https://dev.opencascade.org/doc/occt-7.5.0/refman/html/class_b_rep_builder_a_p_i___make_shape.html
+
+https://dev.opencascade.org/doc/occt-7.5.0/refman/html/class_b_rep_algo___boolean_operation.html
+https://dev.opencascade.org/doc/occt-7.5.0/refman/html/class_b_rep_algo_a_p_i___algo.html
+https://dev.opencascade.org/doc/occt-7.5.0/refman/html/class_b_rep_feat___form.html
+https://dev.opencascade.org/doc/occt-7.5.0/refman/html/class_b_rep_prim_a_p_i___make_sweep.html
+https://dev.opencascade.org/doc/occt-7.5.0/refman/html/class_shape_construct___make_triangulation.html
+
+https://dev.opencascade.org/doc/occt-7.5.0/refman/html/class_b_rep_prim_a_p_i___make_revol.html#details
+https://dev.opencascade.org/doc/occt-7.5.0/refman/html/class_b_rep_offset_a_p_i___make_pipe_shell.html#details
+https://dev.opencascade.org/doc/occt-7.5.0/refman/html/class_b_rep_offset_a_p_i___make_evolved.html#details
+https://dev.opencascade.org/doc/occt-7.5.0/refman/html/class_b_rep_offset_a_p_i___normal_projection.html#details

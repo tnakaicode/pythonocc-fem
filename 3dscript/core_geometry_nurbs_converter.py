@@ -1,19 +1,24 @@
-##Copyright 2020 Thomas Paviot (tpaviot@gmail.com)
+# Copyright 2020 Thomas Paviot (tpaviot@gmail.com)
 ##
-##This file is part of pythonOCC.
+# This file is part of pythonOCC.
 ##
-##pythonOCC is free software: you can redistribute it and/or modify
-##it under the terms of the GNU Lesser General Public License as published by
-##the Free Software Foundation, either version 3 of the License, or
-##(at your option) any later version.
+# pythonOCC is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 ##
-##pythonOCC is distributed in the hope that it will be useful,
-##but WITHOUT ANY WARRANTY; without even the implied warranty of
-##MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-##GNU Lesser General Public License for more details.
+# pythonOCC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
 ##
-##You should have received a copy of the GNU Lesser General Public License
-##along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU Lesser General Public License
+# along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
+
+import os
+import sys
+sys.path.append(os.path.join("../"))
+from src.base_occ import dispocc
 
 from OCC.Core.BRepPrimAPI import BRepPrimAPI_MakeTorus
 from OCC.Core.BRepBuilderAPI import BRepBuilderAPI_NurbsConvert
@@ -26,11 +31,11 @@ base_shape = BRepPrimAPI_MakeTorus(30, 10).Shape()
 
 # conversion to a nurbs representation
 nurbs_converter = BRepBuilderAPI_NurbsConvert(base_shape, True)
-#nurbs_converter.Perform()
+# nurbs_converter.Perform()
 converted_shape = nurbs_converter.Shape()
 
 # now, all edges should be BSpline curves and surfaces BSpline surfaces
-# see https://www.opencascade.com/doc/occt-7.4.0/refman/html/class_b_rep_builder_a_p_i___nurbs_convert.html#details
+# see https://www.opencascade.com/doc/occt-7.5.0/refman/html/class_b_rep_builder_a_p_i___nurbs_convert.html#details
 
 expl = TopologyExplorer(converted_shape)
 
@@ -44,7 +49,8 @@ for face in expl.faces():
     # check each of the is a BSpline surface
     # it should be, since we used the nurbs converter before
     if not surf_type == GeomAbs_BSplineSurface:
-        raise AssertionError("the face was not converted to a GeomAbs_BSplineSurface")
+        raise AssertionError(
+            "the face was not converted to a GeomAbs_BSplineSurface")
     # get the nurbs
     bsrf = surf.BSpline()
     print("UDegree:", bsrf.UDegree())
@@ -58,7 +64,7 @@ for face in expl.faces():
     vknots = bsrf.VKnots()
     print("\nVknots:", end="")
     for i in range(bsrf.NbVKnots()):
-        print(vknots.Value(i + 1), end=" ")
+        print(vknots.Value(i + 1))
     print("\n")
     # weights, a 2d array
     weights = bsrf.Weights()
@@ -67,7 +73,7 @@ for face in expl.faces():
         print("Weights:", end="")
         for i in range(bsrf.NbUKnots()):
             for j in range(bsrf.NbVKnots()):
-                print(weights.Value(i + 1, j + 1), end=" ")
+                print(weights.Value(i + 1, j + 1))
     # control points (aka poles), as a 2d array
     poles = bsrf.Poles()
     # weights can be None
@@ -76,6 +82,14 @@ for face in expl.faces():
         for i in range(bsrf.NbUPoles()):
             for j in range(bsrf.NbVPoles()):
                 p = poles.Value(i + 1, j + 1)
-                print(p.X(), p.Y(), p.Z(), end=" ")
+                print(p.X(), p.Y(), p.Z())
     print()
     fc_idx += 1
+
+    obj = dispocc()
+    obj.display.DisplayShape(converted_shape, transparency=0.8)
+    obj.display.DisplayShape(base_shape, transparency=0.9, color="RED")
+
+    # obj.export_stp(base_shape)
+    # obj.export_stp(converted_shape)
+    obj.show()

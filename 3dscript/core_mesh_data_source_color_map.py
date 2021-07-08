@@ -18,7 +18,7 @@
 import os
 import random
 
-from OCC.Core.MeshDataSource import Mesh_DataSource
+from OCC.Core.MeshVS import MeshVS_DataSource, MeshVS_Mesh, MeshVS_PrsBuilder
 from OCC.Core.RWStl import rwstl_ReadFile
 from OCC.Core.MeshVS import *
 from OCC.Core.Aspect import Aspect_SequenceOfColor
@@ -27,20 +27,20 @@ from OCC.Core.TColStd import TColStd_DataMapOfIntegerReal
 
 from OCC.Display.SimpleGui import init_display
 
-stl_filename = os.path.join('..', 'assets', 'models', 'fan.stl')
+stl_filename = "./models/fan.stl"
 
 # read the stl file
 a_stl_mesh = rwstl_ReadFile(stl_filename)
 
 # create the data source
-a_data_source = Mesh_DataSource(a_stl_mesh)
+a_data_source = MeshVS_DataSource(a_stl_mesh)
 
 # create a mesh from the data source
 a_mesh = MeshVS_Mesh()
 a_mesh.SetDataSource(a_data_source)
 
 # assign nodal builder to the mesh
-a_builder = MeshVS_NodalColorPrsBuilder(a_mesh, MeshVS_DMF_NodalColorDataPrs | MeshVS_DMF_OCCMask)
+a_builder = MeshVS_NodalColorPrsBuilder(a_mesh)
 a_builder.UseTexture(True)
 
 # prepare color map
