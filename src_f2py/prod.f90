@@ -39,7 +39,7 @@ Pure Real Function prodpure(x,y)
 ! Elemental & Pure functions require intent declaration
 real, Intent(in) :: x,y
 
-prodpure = x*y
+prodpure = 2*x*y
 
 End Function
 

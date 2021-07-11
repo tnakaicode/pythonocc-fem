@@ -23,7 +23,7 @@ assert znointent is None
 assert np.isclose(znoint, 12345.0)
 
 zpure = prod.prodpure(x, y)
-assert zpure == x * y
+assert zpure == x * 2 * y
 
 # MUST be an ndarray e.g. 0d ndarray for scalar case!
 zinout = np.array(23456.0)
