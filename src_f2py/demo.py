@@ -7,7 +7,7 @@ Note: imports from f2py will always be ALL lowercase!
 """
 import numpy as np
 from pyprod import prod
-
+from hello import foo
 
 x = 3
 y = 2
@@ -34,3 +34,5 @@ print("x =", x)
 print("y =", y)
 print("x * y =", zint)
 print("Your system did this in Python using Fortran-compiled library")
+
+foo(a=1)

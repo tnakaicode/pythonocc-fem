@@ -13,6 +13,7 @@ site.ENABLE_USER_SITE = True
 setup(
     #cmdclass = {'build_ext': build_ext},
     ext_modules=[
+        Extension(name="hello", sources=["phai.f90", "hello.f90"]),
         Extension(name="pyprod", sources=["prod.f90"]),
         Extension(name="badprec", sources=["badprec.f90"]),
     ],
