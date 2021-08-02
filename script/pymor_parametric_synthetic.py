@@ -82,6 +82,7 @@ def main(
         ax.semilogy(range(1, len(hsv) + 1), hsv, '.-', label=fr'$\mu = {mu}$')
     ax.set_title('Hankel singular values')
     ax.legend()
+    plt.show()
 
     # System norms
     for mu in mu_list:

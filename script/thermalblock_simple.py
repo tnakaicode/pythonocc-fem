@@ -13,7 +13,8 @@ Arguments:
 
 from typer import Argument, run
 
-from pymor.basic import *
+from pymor.basic import discretize_stationary_cg, new_parallel_pool, rb_greedy, reduction_error_analysis, thermal_block_problem, ExpressionFunction, CoerciveRBReductor
+from pymor.basic import ExpressionParameterFunctional, ProjectionParameterFunctional, LincombOperator, VectorOperator, StationaryModel, Mu, text_problem, rb_adaptive_greedy, pod
 from pymor.tools.typer import Choices
 
 
@@ -31,17 +32,17 @@ TEXT = 'pyMOR'
 ####################################################################################################
 
 def main(
-    model: Choices('pymor fenics ngsolve pymor_text') = Argument(..., help='High-dimensional model.'),
-    alg: Choices('naive greedy adaptive_greedy pod') = Argument(..., help='The model reduction algorithm to use.'),
+    model: Choices('pymor fenics ngsolve pymor_text') = Argument("pymor", help='High-dimensional model.'),
+    alg: Choices('naive greedy adaptive_greedy pod') = Argument("naive", help='The model reduction algorithm to use.'),
     snapshots: int = Argument(
-        ...,
+        1,
         help='naive: ignored.\n\n'
              'greedy/pod: Number of training_set parameters per block'
              '(in total SNAPSHOTS^(XBLOCKS * YBLOCKS) parameters).\n\n'
              'adaptive_greedy: size of validation set.'
     ),
-    rbsize: int = Argument(..., help='Size of the reduced basis.'),
-    test: int = Argument(..., help='Number of parameters for stochastic error estimation.'),
+    rbsize: int = Argument(1, help='Size of the reduced basis.'),
+    test: int = Argument(100, help='Number of parameters for stochastic error estimation.'),
 ):
     # discretize
     ############
@@ -91,9 +92,9 @@ def main(
     # write results to disk
     #######################
     from pymor.core.pickle import dump
-    dump((rom, parameter_space), open('reduced_model.out', 'wb'))
+    dump((rom, parameter_space), open('thermalblock_simple_reduced_model.out', 'wb'))
     results.pop('figure')  # matplotlib figures cannot be serialized
-    dump(results, open('results.out', 'wb'))
+    dump(results, open('thermalblock_simple_results.out', 'wb'))
 
     # visualize reduction error for worst-approximated mu
     #####################################################

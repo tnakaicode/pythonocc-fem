@@ -43,7 +43,7 @@ def main(
     periodic: bool = Option(True, help='If not, solve with dirichlet boundary conditions on left and bottom boundary.'),
     nt: int = Option(100, help='Number of time steps.'),
     num_flux: Choices('lax_friedrichs engquist_osher') = Option('engquist_osher', help='Numerical flux to use.'),
-    plot_err: bool = Option(False, help='Plot error.'),
+    plot_err: bool = Option(True, help='Plot error.'),
     plot_ei_err: bool = Option(False, help='Plot empirical interpolation error.'),
     plot_error_landscape: bool = Option(True, help='Calculate and show plot of reduction error vs. basis sizes.'),
     plot_error_landscape_M: int = Option(10, help='Number of collateral basis sizes to test.'),
