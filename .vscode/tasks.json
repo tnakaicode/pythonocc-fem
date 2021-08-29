@@ -1,0 +1,50 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "F2PY Build",
+			"type": "shell",
+			"options": {
+				"shell": {
+					"args": [],
+				},
+				"cwd": "${fileDirname}",
+			},
+			"command": "f2py",
+			"args": [
+				"--fcompiler=gnu95",
+				"-m",
+				"${fileBasenameNoExtension}",
+				"-c",
+				"${fileBasename}"
+			],
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			}
+		},
+		{
+			"label": "Build F2PY and Copy DLL",
+			"type": "shell",
+            "options": {
+                "shell": {
+                    "executable": "${env:windir}\\sysnative\\cmd.exe",
+                    "args": [
+                        "/c"
+                    ]
+                },
+				"cwd": "${fileDirname}"
+            },
+			"command": "rm lib${fileBasenameNoExtension}*.dll | ls -rt ${fileBasenameNoExtension}/.libs/*.dll | tail -1 | xargs -i -t cp {} .",
+			"dependsOn": [
+				"F2PY Build"
+			],
+			"group": "build"
+		},
+	]
+}

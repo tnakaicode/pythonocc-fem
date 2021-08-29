@@ -6,7 +6,7 @@ issue for getting results back to Python!
 Note: imports from f2py will always be ALL lowercase!
 """
 import numpy as np
-from pyprod import prod
+from prod import prod
 from hello import foo
 
 x = 3

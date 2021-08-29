@@ -14,7 +14,7 @@ setup(
     #cmdclass = {'build_ext': build_ext},
     ext_modules=[
         Extension(name="hello", sources=["phai.f90", "hello.f90"]),
-        Extension(name="pyprod", sources=["prod.f90"]),
+        Extension(name="prod", sources=["prod.f90"]),
         Extension(name="badprec", sources=["badprec.f90"]),
     ],
     include_dirs=[numpy.get_include()],
@@ -23,5 +23,6 @@ setup(
 
 print(get_python_lib())
 # pip install fortran-language-server
+# f2py --fcompiler=gnu95 -m prod -c prod.f90
 # python setup_example.py build_ext --inplace
 # python setup_example.py install --prefix=.
